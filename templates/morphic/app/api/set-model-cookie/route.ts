@@ -18,8 +18,19 @@ export async function POST(req: Request) {
       )
     }
 
-    // Set the cookie using response headers
+    // Clear any existing model cookie first
     const response = NextResponse.json({ success: true })
+
+    // Delete the old cookie by setting it to expire immediately
+    response.cookies.set('selectedModel', '', {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 0, // Expire immediately
+      expires: new Date(0) // Set to epoch time
+    })
+
+    // Set the new cookie
     response.cookies.set('selectedModel', JSON.stringify(selectedModel), {
       httpOnly: false,
       secure: process.env.NODE_ENV === 'production',

@@ -191,6 +191,38 @@
       "providerId": "openrouter",
       "enabled": true,
       "toolCallType": "native"
+    },
+    {
+      "id": "meta-llama/llama-3.1-405b-instruct",
+      "name": "LLaMA 3.1 405B Instruct",
+      "provider": "Meta",
+      "providerId": "openrouter",
+      "enabled": true,
+      "toolCallType": "native"
+    },
+    {
+      "id": "meta-llama/llama-3.1-70b-instruct",
+      "name": "LLaMA 3.1 70B Instruct",
+      "provider": "Meta",
+      "providerId": "openrouter",
+      "enabled": true,
+      "toolCallType": "native"
+    },
+    {
+      "id": "anthropic/claude-3.5-sonnet",
+      "name": "Claude 3.5 Sonnet",
+      "provider": "Anthropic",
+      "providerId": "openrouter",
+      "enabled": true,
+      "toolCallType": "native"
+    },
+    {
+      "id": "google/gemini-pro",
+      "name": "Gemini Pro",
+      "provider": "Google",
+      "providerId": "openrouter",
+      "enabled": true,
+      "toolCallType": "native"
     }
   ]
 }

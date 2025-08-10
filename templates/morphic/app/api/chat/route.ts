@@ -9,9 +9,9 @@ import { isProviderEnabled } from '@/lib/utils/registry'
 export const maxDuration = 30
 
 const DEFAULT_MODEL: Model = {
-  id: 'meta-llama/llama-3.1-405b-instruct',
-  name: 'LLaMA 3.1 405B Instruct',
-  provider: 'Meta',
+  id: 'anthropic/claude-3.5-sonnet',
+  name: 'Claude 3.5 Sonnet',
+  provider: 'Anthropic',
   providerId: 'openrouter',
   enabled: true,
   toolCallType: 'native'

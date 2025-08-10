@@ -1,50 +1,60 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Search, Zap, Clock, DollarSign, Star } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { getModelsForCategory, type Model } from "@/lib/models"
+import { useState, useEffect } from "react";
+import { Search, Zap, Clock, DollarSign, Star } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getModelsForCategory, type Model } from "@/lib/models";
 
 interface ModelPickerProps {
-  category: string
-  selectedModel: Model | null
-  onModelSelect: (model: Model) => void
+  category: string;
+  selectedModel: Model | null;
+  onModelSelect: (model: Model) => void;
 }
 
-export function ModelPicker({ category, selectedModel, onModelSelect }: ModelPickerProps) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [models, setModels] = useState<Model[]>([])
-  const [loading, setLoading] = useState(true)
+export function ModelPicker({
+  category,
+  selectedModel,
+  onModelSelect,
+}: ModelPickerProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [models, setModels] = useState<Model[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadModels = async () => {
-      setLoading(true)
-      const categoryModels = await getModelsForCategory(category)
-      setModels(categoryModels)
-      setLoading(false)
-    }
-    loadModels()
-  }, [category])
+      setLoading(true);
+      const categoryModels = await getModelsForCategory(category);
+      setModels(categoryModels);
+      setLoading(false);
+    };
+    loadModels();
+  }, [category]);
 
   const filteredModels = models.filter(
     (model) =>
       model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      model.description.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+      model.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  const popularModels = filteredModels.filter((model) => model.popular)
-  const otherModels = filteredModels.filter((model) => !model.popular)
+  const popularModels = filteredModels.filter((model) => model.popular);
+  const otherModels = filteredModels.filter((model) => !model.popular);
 
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -52,7 +62,9 @@ export function ModelPicker({ category, selectedModel, onModelSelect }: ModelPic
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold">Choose a Model</h3>
-          <p className="text-sm text-gray-600">Select a model compatible with {category.replace("-", " ")} tasks</p>
+          <p className="text-sm text-gray-600">
+            Select a model compatible with {category.replace("-", " ")} tasks
+          </p>
         </div>
         <Badge variant="secondary">{models.length} models available</Badge>
       </div>
@@ -69,8 +81,12 @@ export function ModelPicker({ category, selectedModel, onModelSelect }: ModelPic
 
       <Tabs defaultValue="popular" className="w-full">
         <TabsList>
-          <TabsTrigger value="popular">Popular ({popularModels.length})</TabsTrigger>
-          <TabsTrigger value="all">All Models ({otherModels.length})</TabsTrigger>
+          <TabsTrigger value="popular">
+            Popular ({popularModels.length})
+          </TabsTrigger>
+          <TabsTrigger value="all">
+            All Models ({otherModels.length})
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="popular" className="space-y-4">
@@ -109,7 +125,7 @@ export function ModelPicker({ category, selectedModel, onModelSelect }: ModelPic
         </div>
       )}
     </div>
-  )
+  );
 }
 
 function ModelCard({
@@ -117,14 +133,16 @@ function ModelCard({
   isSelected,
   onSelect,
 }: {
-  model: Model
-  isSelected: boolean
-  onSelect: () => void
+  model: Model;
+  isSelected: boolean;
+  onSelect: () => void;
 }) {
   return (
     <Card
       className={`cursor-pointer transition-all duration-200 ${
-        isSelected ? "ring-2 ring-purple-500 bg-purple-50" : "hover:shadow-md hover:bg-gray-50"
+        isSelected
+          ? "ring-2 ring-purple-500 bg-purple-50"
+          : "hover:shadow-md hover:bg-gray-50"
       }`}
       onClick={onSelect}
     >
@@ -140,7 +158,9 @@ function ModelCard({
             )}
           </div>
         </div>
-        <CardDescription className="text-sm">{model.description}</CardDescription>
+        <CardDescription className="text-sm">
+          {model.description}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex items-center justify-between text-xs text-gray-600">
@@ -160,11 +180,15 @@ function ModelCard({
           </div>
         </div>
         <div className="mt-3">
-          <Button size="sm" variant={isSelected ? "default" : "outline"} className="w-full">
+          <Button
+            size="sm"
+            variant={isSelected ? "default" : "outline"}
+            className="w-full"
+          >
             {isSelected ? "Selected" : "Select Model"}
           </Button>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

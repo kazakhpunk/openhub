@@ -1,11 +1,16 @@
 export interface Template {
-  id: string
-  name: string
-  description: string
-  category: "text-to-image" | "text-to-text" | "image-to-text" | "text-to-audio" | "text-to-video"
-  tags: string[]
-  uses: number
-  featured?: boolean
+  id: string;
+  name: string;
+  description: string;
+  category:
+    | "text-to-image"
+    | "text-to-text"
+    | "image-to-text"
+    | "text-to-audio"
+    | "text-to-video";
+  tags: string[];
+  uses: number;
+  featured?: boolean;
 }
 
 export const templates: Template[] = [
@@ -13,7 +18,8 @@ export const templates: Template[] = [
   {
     id: "ai-art-generator",
     name: "AI Art Generator",
-    description: "Create stunning artwork from text descriptions using advanced diffusion models",
+    description:
+      "Create stunning artwork from text descriptions using advanced diffusion models",
     category: "text-to-image",
     tags: ["art", "creative", "diffusion", "stable-diffusion"],
     uses: 15420,
@@ -24,16 +30,28 @@ export const templates: Template[] = [
   {
     id: "ai-sdk-reasoning-starter",
     name: "AI SDK Reasoning Starter",
-    description: "Experiment with reasoning-capable models and share configured sessions",
+    description:
+      "Experiment with reasoning-capable models and share configured sessions",
     category: "text-to-text",
     tags: ["reasoning", "openrouter", "nextjs", "ai-sdk"],
     uses: 0,
     featured: true,
   },
   {
+    id: "morphic",
+    name: "Morphic",
+    description:
+      "AI-powered search engine with customizable models and beautiful interface",
+    category: "text-to-text",
+    tags: ["search", "ai", "research", "morphic"],
+    uses: 12500,
+    featured: true,
+  },
+  {
     id: "logo-maker",
     name: "Logo Maker",
-    description: "Generate professional logos for your brand with AI assistance",
+    description:
+      "Generate professional logos for your brand with AI assistance",
     category: "text-to-image",
     tags: ["logo", "branding", "business", "design"],
     uses: 8930,
@@ -41,7 +59,8 @@ export const templates: Template[] = [
   {
     id: "product-mockup",
     name: "Product Mockup Generator",
-    description: "Create realistic product mockups for e-commerce and marketing",
+    description:
+      "Create realistic product mockups for e-commerce and marketing",
     category: "text-to-image",
     tags: ["mockup", "product", "ecommerce", "marketing"],
     uses: 6750,
@@ -59,7 +78,8 @@ export const templates: Template[] = [
   {
     id: "content-writer",
     name: "Content Writer",
-    description: "Generate high-quality blog posts, articles, and marketing copy",
+    description:
+      "Generate high-quality blog posts, articles, and marketing copy",
     category: "text-to-text",
     tags: ["writing", "content", "blog", "marketing"],
     uses: 23450,
@@ -155,9 +175,10 @@ export const templates: Template[] = [
   {
     id: "social-video",
     name: "Social Media Video",
-    description: "Generate short-form videos perfect for social media platforms",
+    description:
+      "Generate short-form videos perfect for social media platforms",
     category: "text-to-video",
     tags: ["video", "social-media", "short-form", "viral"],
     uses: 8920,
   },
-]
+];

@@ -14,6 +14,16 @@ export async function setModelFromHash(formData: FormData) {
   const selectedModel = findModelByHash(hash, models)
 
   if (selectedModel && selectedModel.enabled) {
+    // Clear any existing model cookie first
+    cookies().set('selectedModel', '', {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 0, // Expire immediately
+      expires: new Date(0) // Set to epoch time
+    })
+
+    // Set the new model cookie
     cookies().set('selectedModel', JSON.stringify(selectedModel), {
       httpOnly: false,
       secure: process.env.NODE_ENV === 'production',

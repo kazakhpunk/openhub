@@ -1,40 +1,52 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { X, Sparkles, Settings, Rocket, ExternalLink } from "lucide-react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ModelPicker } from "@/components/model-picker"
-import type { Template } from "@/lib/templates"
-import { useRouter } from "next/navigation"
-import { encodeData } from "@/lib/encoding"
-import { getReasoningModels } from "@/lib/models"
+import { useState } from "react";
+import { X, Sparkles, Settings, Rocket, ExternalLink } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ModelPicker } from "@/components/model-picker";
+import type { Template } from "@/lib/templates";
+import { useRouter } from "next/navigation";
+import { encodeData, generateModelHash } from "@/lib/encoding";
+import { getReasoningModels } from "@/lib/models";
 
 interface TemplateModalProps {
-  template: Template
-  isOpen: boolean
-  onClose: () => void
+  template: Template;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export function TemplateModal({ template, isOpen, onClose }: TemplateModalProps) {
-  const router = useRouter()
-  const [customTitle, setCustomTitle] = useState(template.name)
-  const [customDescription, setCustomDescription] = useState(template.description)
-  const [selectedModel, setSelectedModel] = useState<any>(null)
-  const [reasoningModels, setReasoningModels] = useState<Array<{ id: string; name: string }>>([])
-  const [isDeploying, setIsDeploying] = useState(false)
+export function TemplateModal({
+  template,
+  isOpen,
+  onClose,
+}: TemplateModalProps) {
+  const router = useRouter();
+  const [customTitle, setCustomTitle] = useState(template.name);
+  const [customDescription, setCustomDescription] = useState(
+    template.description
+  );
+  const [selectedModel, setSelectedModel] = useState<any>(null);
+  const [reasoningModels, setReasoningModels] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
+  const [isDeploying, setIsDeploying] = useState(false);
 
   const handleDeploy = async () => {
-
-    setIsDeploying(true)
+    setIsDeploying(true);
 
     // Simulate deployment delay
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Create deployment configuration
     const deploymentConfig = {
@@ -43,44 +55,72 @@ export function TemplateModal({ template, isOpen, onClose }: TemplateModalProps)
       description: customDescription,
       model: selectedModel,
       timestamp: Date.now(),
-    }
+    };
 
     // Store in localStorage for the deployed page
-    localStorage.setItem(`deployment-${template.id}`, JSON.stringify(deploymentConfig))
+    localStorage.setItem(
+      `deployment-${template.id}`,
+      JSON.stringify(deploymentConfig)
+    );
 
     // Navigate to deployed page
-    router.push(`/deployed/${template.id}`)
-    onClose()
-  }
+    router.push(`/deployed/${template.id}`);
+    onClose();
+  };
 
   const handleOpenReasoning = async () => {
-    const heading = customTitle || "Welcome to the AI SDK Reasoning Preview."
-    const description = customDescription || "What would you like me to think about today?"
-    const modelId = selectedModel?.id || "openai/gpt-5-mini"
-    const encoded = encodeData(modelId, heading, description)
-    window.open(`http://localhost:3001/${encoded}`, "_blank")
-  }
+    const heading = customTitle || "Welcome to the AI SDK Reasoning Preview.";
+    const description =
+      customDescription || "What would you like me to think about today?";
+    const modelId = selectedModel?.id || "anthropic/claude-3.5-sonnet";
+    const encoded = encodeData(modelId, heading, description);
+    window.open(`http://localhost:3001/${encoded}`, "_blank");
+  };
 
-  const isReasoningTemplate = template.id === "ai-sdk-reasoning-starter"
+  const isReasoningTemplate = template.id === "ai-sdk-reasoning-starter";
+  const isMorphicTemplate = template.id === "morphic";
+
   if (isReasoningTemplate && reasoningModels.length === 0) {
     void getReasoningModels().then((list) => {
-      setReasoningModels(list)
+      setReasoningModels(list);
       if (!selectedModel && list.length > 0) {
-        const fallback = list.find((m) => m.id === "openai/gpt-5-mini") || list[0]
-        setSelectedModel({ id: fallback.id, name: fallback.name })
+        const fallback =
+          list.find((m) => m.id === "anthropic/claude-3.5-sonnet") || list[0];
+        setSelectedModel({ id: fallback.id, name: fallback.name });
       }
-    })
+    });
   }
+
+  const handleMorphicModelSelect = (model: any) => {
+    setSelectedModel(model);
+    const modelHash = generateModelHash(model.id);
+    window.open(`http://localhost:3003?model=${modelHash}`, "_blank");
+    onClose();
+  };
+
+  const handleMorphicDeploy = () => {
+    if (selectedModel) {
+      const modelHash = generateModelHash(selectedModel.id);
+      window.open(`http://localhost:3003?model=${modelHash}`, "_blank");
+    } else {
+      // Open morphic without specific model
+      window.open(`http://localhost:3003`, "_blank");
+    }
+    onClose();
+  };
 
   const handleOpenInCursor = () => {
     // Simulate opening in Cursor
-    window.open(`https://cursor.sh/clone?repo=openhub-template-${template.id}`, "_blank")
-  }
+    window.open(
+      `https://cursor.sh/clone?repo=openhub-template-${template.id}`,
+      "_blank"
+    );
+  };
 
   const handleOpenInLovable = () => {
     // Simulate opening in Lovable
-    window.open(`https://lovable.dev/import?template=${template.id}`, "_blank")
-  }
+    window.open(`https://lovable.dev/import?template=${template.id}`, "_blank");
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -106,7 +146,10 @@ export function TemplateModal({ template, isOpen, onClose }: TemplateModalProps)
 
         <Tabs defaultValue="customize" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="customize" className="flex items-center space-x-2">
+            <TabsTrigger
+              value="customize"
+              className="flex items-center space-x-2"
+            >
               <Settings className="w-4 h-4" />
               <span>Customize</span>
             </TabsTrigger>
@@ -157,7 +200,9 @@ export function TemplateModal({ template, isOpen, onClose }: TemplateModalProps)
                 <h3 className="font-semibold mb-3">Template Preview</h3>
                 <div className="bg-white rounded border p-4">
                   <h4 className="font-bold text-lg mb-2">{customTitle}</h4>
-                  <p className="text-gray-600 text-sm mb-3">{customDescription}</p>
+                  <p className="text-gray-600 text-sm mb-3">
+                    {customDescription}
+                  </p>
                   <div className="flex flex-wrap gap-1">
                     {template.tags.slice(0, 3).map((tag) => (
                       <Badge key={tag} variant="secondary" className="text-xs">
@@ -173,14 +218,20 @@ export function TemplateModal({ template, isOpen, onClose }: TemplateModalProps)
           <TabsContent value="model">
             {isReasoningTemplate ? (
               <div className="space-y-3">
-                <div className="text-sm text-gray-600">Reasoning-capable models</div>
+                <div className="text-sm text-gray-600">
+                  Reasoning-capable models
+                </div>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                   {reasoningModels.map((m) => (
                     <button
                       key={m.id}
-                      onClick={() => setSelectedModel({ id: m.id, name: m.name })}
+                      onClick={() =>
+                        setSelectedModel({ id: m.id, name: m.name })
+                      }
                       className={`text-left border rounded p-3 hover:bg-gray-50 ${
-                        selectedModel?.id === m.id ? "ring-2 ring-purple-500 bg-purple-50" : ""
+                        selectedModel?.id === m.id
+                          ? "ring-2 ring-purple-500 bg-purple-50"
+                          : ""
                       }`}
                     >
                       <div className="font-medium">{m.name}</div>
@@ -193,7 +244,15 @@ export function TemplateModal({ template, isOpen, onClose }: TemplateModalProps)
                 )}
               </div>
             ) : (
-              <ModelPicker category={template.category} selectedModel={selectedModel} onModelSelect={setSelectedModel} />
+              <ModelPicker
+                category={template.category}
+                selectedModel={selectedModel}
+                onModelSelect={
+                  isMorphicTemplate
+                    ? handleMorphicModelSelect
+                    : setSelectedModel
+                }
+              />
             )}
           </TabsContent>
 
@@ -233,7 +292,18 @@ export function TemplateModal({ template, isOpen, onClose }: TemplateModalProps)
                   </div>
                 </div>
               </div>
-              <Button onClick={isReasoningTemplate ? handleOpenReasoning : handleDeploy} disabled={isDeploying} className="w-full" size="lg">
+              <Button
+                onClick={
+                  isReasoningTemplate
+                    ? handleOpenReasoning
+                    : isMorphicTemplate
+                    ? handleMorphicDeploy
+                    : handleDeploy
+                }
+                disabled={isDeploying}
+                className="w-full"
+                size="lg"
+              >
                 {isDeploying ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -242,7 +312,11 @@ export function TemplateModal({ template, isOpen, onClose }: TemplateModalProps)
                 ) : (
                   <>
                     <Rocket className="w-4 h-4 mr-2" />
-                    {isReasoningTemplate ? "Open Reasoning Example" : "Deploy App"}
+                    {isReasoningTemplate
+                      ? "Open Reasoning Example"
+                      : isMorphicTemplate
+                      ? "Open Morphic"
+                      : "Deploy App"}
                   </>
                 )}
               </Button>
@@ -251,5 +325,5 @@ export function TemplateModal({ template, isOpen, onClose }: TemplateModalProps)
         </Tabs>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

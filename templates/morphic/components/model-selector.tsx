@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { Check, ChevronsUpDown, Lightbulb } from 'lucide-react'
 
 import { Model } from '@/lib/types/models'
-import { getCookie, setCookie } from '@/lib/utils/cookies'
+import { getCookie, setCookie, deleteCookie } from '@/lib/utils/cookies'
 import { isReasoningModel } from '@/lib/utils/registry'
 
 import { createModelId } from '../lib/utils'
@@ -76,10 +76,12 @@ export function ModelSelector({ models }: ModelSelectorProps) {
     const selectedModel = models.find(
       model => createModelId(model) === newValue
     )
+
+    // Clear any existing model cookie first
+    deleteCookie('selectedModel')
+
     if (selectedModel) {
       setCookie('selectedModel', JSON.stringify(selectedModel))
-    } else {
-      setCookie('selectedModel', '')
     }
 
     setOpen(false)

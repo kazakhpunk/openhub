@@ -87,8 +87,19 @@ export async function POST(
       )
     }
 
-    // Set the selected model in cookies (same way as the current implementation)
+    // Clear any existing model cookie first, then set the new one
     const cookieStore = await cookies()
+
+    // Clear the existing cookie
+    cookieStore.set('selectedModel', '', {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 0, // Expire immediately
+      expires: new Date(0) // Set to epoch time
+    })
+
+    // Set the new selected model in cookies
     cookieStore.set('selectedModel', JSON.stringify(model), {
       httpOnly: false,
       secure: process.env.NODE_ENV === 'production',

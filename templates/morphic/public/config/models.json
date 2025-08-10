@@ -1,38 +1,6 @@
 {
   "models": [
     {
-      "id": "openai/gpt-5",
-      "name": "GPT-5",
-      "provider": "OpenAI",
-      "providerId": "openrouter",
-      "enabled": true,
-      "toolCallType": "native"
-    },
-    {
-      "id": "openai/gpt-5-chat",
-      "name": "GPT-5 Chat",
-      "provider": "OpenAI",
-      "providerId": "openrouter",
-      "enabled": true,
-      "toolCallType": "native"
-    },
-    {
-      "id": "openai/gpt-5-mini",
-      "name": "GPT-5 Mini",
-      "provider": "OpenAI",
-      "providerId": "openrouter",
-      "enabled": true,
-      "toolCallType": "native"
-    },
-    {
-      "id": "openai/gpt-5-nano",
-      "name": "GPT-5 Nano",
-      "provider": "OpenAI",
-      "providerId": "openrouter",
-      "enabled": true,
-      "toolCallType": "native"
-    },
-    {
       "id": "anthropic/claude-opus-4.1",
       "name": "Claude Opus 4.1",
       "provider": "Anthropic",
@@ -188,6 +156,39 @@
       "id": "thudm/glm-4.1v-9b-thinking",
       "name": "GLM 4.1V 9B Thinking",
       "provider": "THUDM",
+      "providerId": "openrouter",
+      "enabled": true,
+      "toolCallType": "native"
+    },
+    {
+      "id": "meta-llama/llama-3.1-405b-instruct",
+      "name": "LLaMA 3.1 405B Instruct",
+      "provider": "Meta",
+      "providerId": "openrouter",
+      "enabled": true,
+      "toolCallType": "native"
+    },
+    {
+      "id": "meta-llama/llama-3.1-70b-instruct",
+      "name": "LLaMA 3.1 70B Instruct",
+      "provider": "Meta",
+      "providerId": "openrouter",
+      "enabled": true,
+      "toolCallType": "native"
+    },
+
+    {
+      "id": "anthropic/claude-3.5-sonnet",
+      "name": "Claude 3.5 Sonnet",
+      "provider": "Anthropic",
+      "providerId": "openrouter",
+      "enabled": true,
+      "toolCallType": "native"
+    },
+    {
+      "id": "google/gemini-pro",
+      "name": "Gemini Pro",
+      "provider": "Google",
       "providerId": "openrouter",
       "enabled": true,
       "toolCallType": "native"
