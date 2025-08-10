@@ -60,14 +60,14 @@ modelIds.forEach((modelId, index) => {
   console.log(`• ${name}`);
   console.log(`  Model ID: ${modelId}`);
   console.log(`  Hash: ${hash}`);
-  const morphicBaseUrl = process.env.MORPHIC_URL || "http://localhost:3003";
+  const morphicBaseUrl = process.env.MORPHIC_URL || "https://morphic.trott.dev";
   console.log(`  Morphic URL: ${morphicBaseUrl}?model=${hash}`);
   console.log("");
 });
 
 console.log(`\n📊 Total models: ${modelIds.length}`);
 console.log("\n🔗 Example usage:");
-const morphicBaseUrlExample = process.env.MORPHIC_URL || "http://localhost:3003";
+const morphicBaseUrlExample = process.env.MORPHIC_URL || "https://morphic.trott.dev";
 console.log(
   `• Redirect to morphic with specific model: ${morphicBaseUrlExample}?model=abc123def456`
 );

@@ -33,10 +33,10 @@ export function TemplateModal({
   onClose,
 }: TemplateModalProps) {
   const REASONING_URL =
-    process.env.NEXT_PUBLIC_REASONING_URL || "http://localhost:3001";
-  const ALTGEN_URL = process.env.NEXT_PUBLIC_ALTGEN_URL || "http://localhost:3002";
+    process.env.NEXT_PUBLIC_REASONING_URL || "https://reasoning.trott.dev";
+  const ALTGEN_URL = process.env.NEXT_PUBLIC_ALTGEN_URL || "https://altgen.trott.dev";
   const MORPHIC_URL =
-    process.env.NEXT_PUBLIC_MORPHIC_URL || "http://localhost:3003";
+    process.env.NEXT_PUBLIC_MORPHIC_URL || "https://morphic.trott.dev";
   const router = useRouter();
   const [customTitle, setCustomTitle] = useState(template.name);
   const [customDescription, setCustomDescription] = useState(
