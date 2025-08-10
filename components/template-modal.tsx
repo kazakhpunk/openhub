@@ -18,7 +18,7 @@ import { ModelPicker } from "@/components/model-picker";
 import type { Template } from "@/lib/templates";
 import { useRouter } from "next/navigation";
 import { encodeData, generateModelHash } from "@/lib/encoding";
-import { getReasoningModels } from "@/lib/models";
+import { getReasoningModels, getImageModels } from "@/lib/models";
 
 interface TemplateModalProps {
   template: Template;
@@ -38,6 +38,9 @@ export function TemplateModal({
   );
   const [selectedModel, setSelectedModel] = useState<any>(null);
   const [reasoningModels, setReasoningModels] = useState<
+    Array<{ id: string; name: string }>
+  >([]);
+  const [imageModels, setImageModels] = useState<
     Array<{ id: string; name: string }>
   >([]);
   const [isDeploying, setIsDeploying] = useState(false);
@@ -78,6 +81,7 @@ export function TemplateModal({
   };
 
   const isReasoningTemplate = template.id === "ai-sdk-reasoning-starter";
+  const isImageTemplate = template.id === "alt-tag-generator";
   const isMorphicTemplate = template.id === "morphic";
 
   if (isReasoningTemplate && reasoningModels.length === 0) {
@@ -86,6 +90,16 @@ export function TemplateModal({
       if (!selectedModel && list.length > 0) {
         const fallback =
           list.find((m) => m.id === "anthropic/claude-3.5-sonnet") || list[0];
+        setSelectedModel({ id: fallback.id, name: fallback.name });
+      }
+    });
+  }
+
+  if (isImageTemplate && imageModels.length === 0) {
+    void getImageModels().then((list) => {
+      setImageModels(list);
+      if (!selectedModel && list.length > 0) {
+        const fallback = list[0];
         setSelectedModel({ id: fallback.id, name: fallback.name });
       }
     });
@@ -243,6 +257,33 @@ export function TemplateModal({
                   <div className="text-sm text-gray-500">Loading models…</div>
                 )}
               </div>
+            ) : isImageTemplate ? (
+              <div className="space-y-3">
+                <div className="text-sm text-gray-600">
+                  Image-capable models
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                  {imageModels.map((m) => (
+                    <button
+                      key={m.id}
+                      onClick={() =>
+                        setSelectedModel({ id: m.id, name: m.name })
+                      }
+                      className={`text-left border rounded p-3 hover:bg-gray-50 ${
+                        selectedModel?.id === m.id
+                          ? "ring-2 ring-purple-500 bg-purple-50"
+                          : ""
+                      }`}
+                    >
+                      <div className="font-medium">{m.name}</div>
+                      <div className="text-xs text-gray-500">{m.id}</div>
+                    </button>
+                  ))}
+                </div>
+                {imageModels.length === 0 && (
+                  <div className="text-sm text-gray-500">Loading models…</div>
+                )}
+              </div>
             ) : (
               <ModelPicker
                 category={template.category}
@@ -296,6 +337,22 @@ export function TemplateModal({
                 onClick={
                   isReasoningTemplate
                     ? handleOpenReasoning
+                    : isImageTemplate
+                    ? async () => {
+                        const heading = customTitle;
+                        const description = customDescription;
+                        const modelId =
+                          selectedModel?.id || "anthropic/claude-3.5-sonnet";
+                        const encoded = encodeData(
+                          modelId,
+                          heading,
+                          description
+                        );
+                        window.open(
+                          `http://localhost:3002/${encoded}`,
+                          "_blank"
+                        );
+                      }
                     : isMorphicTemplate
                     ? handleMorphicDeploy
                     : handleDeploy
@@ -314,6 +371,8 @@ export function TemplateModal({
                     <Rocket className="w-4 h-4 mr-2" />
                     {isReasoningTemplate
                       ? "Open Reasoning Example"
+                      : isImageTemplate
+                      ? "Open Alt Tag Generator"
                       : isMorphicTemplate
                       ? "Open Morphic"
                       : "Deploy App"}

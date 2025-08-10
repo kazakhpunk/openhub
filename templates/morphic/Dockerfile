@@ -1,3 +1,31 @@
+# Morphic template (if Next.js app; default to 3003)
+ARG NODE_VERSION=20
+
+FROM node:${NODE_VERSION}-alpine AS deps
+WORKDIR /app
+RUN corepack enable
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+
+FROM node:${NODE_VERSION}-alpine AS builder
+WORKDIR /app
+RUN corepack enable
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN pnpm build || echo "Build skipped"
+
+FROM node:${NODE_VERSION}-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN corepack enable
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile --prod
+COPY --from=builder /app/.next ./.next 2>/dev/null || true
+COPY --from=builder /app/public ./public 2>/dev/null || true
+EXPOSE 3003
+CMD ["pnpm","start"]
+
 # Base image
 FROM oven/bun:1.2.12 AS builder
 

@@ -128,6 +128,15 @@ export const templates: Template[] = [
     uses: 7890,
   },
   {
+    id: "alt-tag-generator",
+    name: "Alt Tag Generator",
+    description: "Upload or paste an image and generate concise, accessible alt text.",
+    category: "image-to-text",
+    tags: ["accessibility", "caption", "openrouter", "nextjs"],
+    uses: 0,
+    featured: true,
+  },
+  {
     id: "ocr-extractor",
     name: "OCR Text Extractor",
     description: "Extract text from images, documents, and screenshots",

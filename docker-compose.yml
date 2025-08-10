@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  openhub:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: openhub
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    ports:
+      - "3000:3000"
+    depends_on: []
+    restart: unless-stopped
+
+  reasoning:
+    build:
+      context: ./templates/ai-sdk-reasoning-starter
+      dockerfile: Dockerfile
+    container_name: reasoning
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - NEXT_PUBLIC_APP_URL=http://localhost:3001
+      - NEXT_PUBLIC_APP_NAME=Reasoning
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
+    depends_on:
+      - openhub
+
+  altgen:
+    build:
+      context: ./templates/alt-tag-generator
+      dockerfile: Dockerfile
+    container_name: altgen
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    ports:
+      - "3002:3002"
+    restart: unless-stopped
+    depends_on:
+      - openhub
+
+  morphic:
+    build:
+      context: ./templates/morphic
+      dockerfile: Dockerfile
+    container_name: morphic
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+    ports:
+      - "3003:3003"
+    restart: unless-stopped
+    depends_on:
+      - openhub
+
+
