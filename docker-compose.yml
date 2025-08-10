@@ -12,13 +12,13 @@ services:
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
       - MODEL_HASH_SECRET=${MODEL_HASH_SECRET}
       # App URLs (frontend)
-      - NEXT_PUBLIC_REASONING_URL=${REASONING_URL}
-      - NEXT_PUBLIC_ALTGEN_URL=${ALTGEN_URL}
-      - NEXT_PUBLIC_MORPHIC_URL=${MORPHIC_URL}
+      - NEXT_PUBLIC_REASONING_URL=https://reasoning.trott.dev
+      - NEXT_PUBLIC_ALTGEN_URL=https://altgen.trott.dev
+      - NEXT_PUBLIC_MORPHIC_URL=https://morphic.trott.dev
       # App URLs (node scripts)
-      - REASONING_URL=${REASONING_URL}
-      - ALTGEN_URL=${ALTGEN_URL}
-      - MORPHIC_URL=${MORPHIC_URL}
+      - REASONING_URL=https://reasoning.trott.dev
+      - ALTGEN_URL=https://altgen.trott.dev
+      - MORPHIC_URL=https://morphic.trott.dev
     ports:
       - "3000:3000"
     depends_on: []
@@ -33,7 +33,7 @@ services:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
-      - NEXT_PUBLIC_APP_URL=${REASONING_URL}
+      - NEXT_PUBLIC_APP_URL=https://reasoning.trott.dev
       - NEXT_PUBLIC_APP_NAME=Reasoning
     ports:
       - "3001:3001"
@@ -50,7 +50,7 @@ services:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
-      - NEXT_PUBLIC_BASE_URL=${ALTGEN_URL}
+      - NEXT_PUBLIC_BASE_URL=https://altgen.trott.dev
     ports:
       - "3002:3002"
     restart: unless-stopped
@@ -68,8 +68,8 @@ services:
       # Shared
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
       # Base URLs
-      - NEXT_PUBLIC_BASE_URL=${MORPHIC_URL}
-      - BASE_URL=${MORPHIC_URL}
+      - NEXT_PUBLIC_BASE_URL=https://morphic.trott.dev
+      - BASE_URL=https://morphic.trott.dev
       # Supabase
       - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
       - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
