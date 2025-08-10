@@ -13,7 +13,7 @@ import { ModelPicker } from "@/components/model-picker"
 import type { Template } from "@/lib/templates"
 import { useRouter } from "next/navigation"
 import { encodeData } from "@/lib/encoding"
-import { getReasoningModels } from "@/lib/models"
+import { getReasoningModels, getImageModels } from "@/lib/models"
 
 interface TemplateModalProps {
   template: Template
@@ -27,6 +27,7 @@ export function TemplateModal({ template, isOpen, onClose }: TemplateModalProps)
   const [customDescription, setCustomDescription] = useState(template.description)
   const [selectedModel, setSelectedModel] = useState<any>(null)
   const [reasoningModels, setReasoningModels] = useState<Array<{ id: string; name: string }>>([])
+  const [imageModels, setImageModels] = useState<Array<{ id: string; name: string }>>([])
   const [isDeploying, setIsDeploying] = useState(false)
 
   const handleDeploy = async () => {
@@ -62,11 +63,21 @@ export function TemplateModal({ template, isOpen, onClose }: TemplateModalProps)
   }
 
   const isReasoningTemplate = template.id === "ai-sdk-reasoning-starter"
+  const isImageTemplate = template.id === "alt-tag-generator"
   if (isReasoningTemplate && reasoningModels.length === 0) {
     void getReasoningModels().then((list) => {
       setReasoningModels(list)
       if (!selectedModel && list.length > 0) {
         const fallback = list.find((m) => m.id === "openai/gpt-5-mini") || list[0]
+        setSelectedModel({ id: fallback.id, name: fallback.name })
+      }
+    })
+  }
+  if (isImageTemplate && imageModels.length === 0) {
+    void getImageModels().then((list) => {
+      setImageModels(list)
+      if (!selectedModel && list.length > 0) {
+        const fallback = list[0]
         setSelectedModel({ id: fallback.id, name: fallback.name })
       }
     })
@@ -192,6 +203,27 @@ export function TemplateModal({ template, isOpen, onClose }: TemplateModalProps)
                   <div className="text-sm text-gray-500">Loading models…</div>
                 )}
               </div>
+            ) : isImageTemplate ? (
+              <div className="space-y-3">
+                <div className="text-sm text-gray-600">Image-capable models</div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                  {imageModels.map((m) => (
+                    <button
+                      key={m.id}
+                      onClick={() => setSelectedModel({ id: m.id, name: m.name })}
+                      className={`text-left border rounded p-3 hover:bg-gray-50 ${
+                        selectedModel?.id === m.id ? "ring-2 ring-purple-500 bg-purple-50" : ""
+                      }`}
+                    >
+                      <div className="font-medium">{m.name}</div>
+                      <div className="text-xs text-gray-500">{m.id}</div>
+                    </button>
+                  ))}
+                </div>
+                {imageModels.length === 0 && (
+                  <div className="text-sm text-gray-500">Loading models…</div>
+                )}
+              </div>
             ) : (
               <ModelPicker category={template.category} selectedModel={selectedModel} onModelSelect={setSelectedModel} />
             )}
@@ -233,7 +265,13 @@ export function TemplateModal({ template, isOpen, onClose }: TemplateModalProps)
                   </div>
                 </div>
               </div>
-              <Button onClick={isReasoningTemplate ? handleOpenReasoning : handleDeploy} disabled={isDeploying} className="w-full" size="lg">
+              <Button onClick={isReasoningTemplate ? handleOpenReasoning : isImageTemplate ? async () => {
+                const heading = customTitle
+                const description = customDescription
+                const modelId = selectedModel?.id || "openai/gpt-4o-mini"
+                const encoded = encodeData(modelId, heading, description)
+                window.open(`http://localhost:3002/${encoded}`, "_blank")
+              } : handleDeploy} disabled={isDeploying} className="w-full" size="lg">
                 {isDeploying ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -242,7 +280,7 @@ export function TemplateModal({ template, isOpen, onClose }: TemplateModalProps)
                 ) : (
                   <>
                     <Rocket className="w-4 h-4 mr-2" />
-                    {isReasoningTemplate ? "Open Reasoning Example" : "Deploy App"}
+                    {isReasoningTemplate ? "Open Reasoning Example" : isImageTemplate ? "Open Alt Tag Generator" : "Deploy App"}
                   </>
                 )}
               </Button>

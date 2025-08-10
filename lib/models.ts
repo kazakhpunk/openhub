@@ -203,3 +203,14 @@ export async function getReasoningModels(): Promise<Array<{ id: string; name: st
     return []
   }
 }
+
+export async function getImageModels(): Promise<Array<{ id: string; name: string }>> {
+  try {
+    const res = await fetch("/api/image-models", { cache: "force-cache" })
+    if (!res.ok) return []
+    const body = (await res.json()) as { data: Array<{ id: string; name: string }> }
+    return body.data
+  } catch {
+    return []
+  }
+}
