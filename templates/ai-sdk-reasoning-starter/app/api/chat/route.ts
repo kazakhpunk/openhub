@@ -6,8 +6,6 @@ import { openrouter } from "@/lib/models";
 export async function POST(request: NextRequest) {
   const {
     messages,
-    selectedModelId,
-    isReasoningEnabled,
   }: {
     messages: Array<UIMessage>;
     selectedModelId: modelID;

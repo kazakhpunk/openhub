@@ -29,7 +29,7 @@ type OpenRouterModelsResponse = {
 };
 
 export const dynamic = "force-static";
-export const revalidate = 60 * 60 * 24 * 365; // cache for ~1 year
+export const revalidate = 31536000; // 1 year in seconds
 
 export async function GET() {
   const apiUrl = "https://openrouter.ai/api/v1/models";
@@ -79,7 +79,7 @@ export async function GET() {
           "public, max-age=31536000, s-maxage=31536000, immutable",
       },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Unexpected error while fetching models" },
       { status: 500 }

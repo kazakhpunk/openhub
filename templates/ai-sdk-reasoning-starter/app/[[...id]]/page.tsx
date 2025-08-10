@@ -1,14 +1,12 @@
+'use client'
+
 import { Chat } from "@/components/chat";
 import { decodeData } from "@/lib/encoding";
+import { useParams } from "next/navigation";
 
-interface HomeProps {
-  params: {
-    id?: string[];
-  };
-}
-
-export default function Home({ params }: HomeProps) {
-  const encodedId = params.id?.[0];
+export default function Home() {
+  const params = useParams<{ id: string }>();
+  const encodedId = params.id;
   let presetData = null;
 
   if (encodedId) {
