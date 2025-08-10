@@ -63,10 +63,10 @@ export default function TemplatePage() {
               <Badge variant="secondary" className="px-4 py-2">
                 {template.category.replace("-", " ").toUpperCase()}
               </Badge>
-              <div className="flex items-center space-x-1 text-gray-600">
+              {/* <div className="flex items-center space-x-1 text-gray-600">
                 <Star className="w-4 h-4" />
                 <span>{template.uses} uses</span>
-              </div>
+              </div> */}
             </div>
             <div className="flex flex-wrap gap-2 justify-center">
               {template.tags.map((tag) => (
@@ -162,9 +162,9 @@ export default function TemplatePage() {
                 View Source Code
               </Button>
             </div>
-            <p className="text-sm text-gray-600">
+            {/* <p className="text-sm text-gray-600">
               Join {template.uses.toLocaleString()} developers who have used this template
-            </p>
+            </p> */}
           </div>
         </div>
       </div>

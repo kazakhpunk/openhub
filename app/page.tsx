@@ -1,13 +1,27 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Search, Sparkles, Zap, ImageIcon, MessageSquare, Music, Video } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { TemplateModal } from "@/components/template-modal"
-import { templates, type Template } from "@/lib/templates"
+import { useState } from "react";
+import {
+  Search,
+  Sparkles,
+  Zap,
+  ImageIcon,
+  MessageSquare,
+  Music,
+  Video,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { TemplateModal } from "@/components/template-modal";
+import { templates, type Template } from "@/lib/templates";
 
 const categories = [
   { id: "all", name: "All Templates", icon: Sparkles },
@@ -16,20 +30,23 @@ const categories = [
   { id: "image-to-text", name: "Image to Text", icon: Zap },
   { id: "text-to-audio", name: "Text to Audio", icon: Music },
   { id: "text-to-video", name: "Text to Video", icon: Video },
-]
+];
 
 export default function HomePage() {
-  const [selectedCategory, setSelectedCategory] = useState("all")
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
+    null
+  );
 
   const filteredTemplates = templates.filter((template) => {
-    const matchesCategory = selectedCategory === "all" || template.category === selectedCategory
+    const matchesCategory =
+      selectedCategory === "all" || template.category === selectedCategory;
     const matchesSearch =
       template.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      template.description.toLowerCase().includes(searchQuery.toLowerCase())
-    return matchesCategory && matchesSearch
-  })
+      template.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
@@ -60,8 +77,8 @@ export default function HomePage() {
             The Canva for AI Apps
           </h2>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Browse, customize, and deploy AI applications instantly. Start with ready-made templates instead of building
-            from scratch.
+            Browse, customize, and deploy AI applications instantly. Start with
+            ready-made templates instead of building from scratch.
           </p>
           <div className="flex items-center justify-center space-x-4 mb-12">
             <Badge variant="secondary" className="px-4 py-2">
@@ -95,18 +112,20 @@ export default function HomePage() {
             </div>
             <div className="flex flex-wrap gap-2">
               {categories.map((category) => {
-                const Icon = category.icon
+                const Icon = category.icon;
                 return (
                   <Button
                     key={category.id}
-                    variant={selectedCategory === category.id ? "default" : "outline"}
+                    variant={
+                      selectedCategory === category.id ? "default" : "outline"
+                    }
                     onClick={() => setSelectedCategory(category.id)}
                     className="flex items-center space-x-2"
                   >
                     <Icon className="w-4 h-4" />
                     <span>{category.name}</span>
                   </Button>
-                )
+                );
               })}
             </div>
           </div>
@@ -124,19 +143,21 @@ export default function HomePage() {
                 onClick={() => setSelectedTemplate(template)}
               >
                 <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <Badge variant="secondary" className="text-xs">
+                  <div className="">
+                    <Badge variant="secondary" className="text-xs ml-0">
                       {template.category.replace("-", " ").toUpperCase()}
                     </Badge>
-                    <div className="flex items-center space-x-1 text-sm text-gray-500">
+                    {/* <div className="flex items-center space-x-1 text-sm text-gray-500">
                       <Sparkles className="w-3 h-3" />
                       <span>{template.uses}</span>
-                    </div>
+                    </div> */}
                   </div>
                   <CardTitle className="text-lg group-hover:text-purple-600 transition-colors">
                     {template.name}
                   </CardTitle>
-                  <CardDescription className="text-sm">{template.description}</CardDescription>
+                  <CardDescription className="text-sm">
+                    {template.description}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
@@ -152,7 +173,11 @@ export default function HomePage() {
                         </Badge>
                       )}
                     </div>
-                    <Button size="sm" variant="ghost" className="group-hover:bg-purple-100 group-hover:text-purple-600">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="group-hover:bg-purple-100 group-hover:text-purple-600"
+                    >
                       Use Template
                     </Button>
                   </div>
@@ -166,8 +191,12 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Search className="w-8 h-8 text-gray-400" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-600 mb-2">No templates found</h3>
-              <p className="text-gray-500">Try adjusting your search or filter criteria</p>
+              <h3 className="text-lg font-semibold text-gray-600 mb-2">
+                No templates found
+              </h3>
+              <p className="text-gray-500">
+                Try adjusting your search or filter criteria
+              </p>
             </div>
           )}
         </div>
@@ -182,5 +211,5 @@ export default function HomePage() {
         />
       )}
     </div>
-  )
+  );
 }

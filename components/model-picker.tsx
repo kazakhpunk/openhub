@@ -85,7 +85,7 @@ export function ModelPicker({
             Popular ({popularModels.length})
           </TabsTrigger>
           <TabsTrigger value="all">
-            All Models ({otherModels.length})
+            Other Models ({otherModels.length})
           </TabsTrigger>
         </TabsList>
 
@@ -163,18 +163,16 @@ function ModelCard({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center justify-between text-xs text-gray-600">
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-1">
-              <Zap className="w-3 h-3" />
-              <span>{model.speed}</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <Clock className="w-3 h-3" />
-              <span>{model.latency}</span>
-            </div>
+        <div className="flex items-center justify-between lg:grid lg:grid-cols-2 lg:gap-2 text-xs text-gray-600">
+          <div className="flex items-center space-x-1">
+            <Zap className="w-3 h-3" />
+            <span>{model.speed}</span>
           </div>
           <div className="flex items-center space-x-1">
+            <Clock className="w-3 h-3" />
+            <span>{model.latency}</span>
+          </div>
+          <div className="flex items-center space-x-1 col-span-2">
             <DollarSign className="w-3 h-3" />
             <span>{model.pricing}</span>
           </div>

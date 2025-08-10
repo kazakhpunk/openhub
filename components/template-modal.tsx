@@ -19,6 +19,7 @@ import type { Template } from "@/lib/templates";
 import { useRouter } from "next/navigation";
 import { encodeData, generateModelHash } from "@/lib/encoding";
 import { getReasoningModels, getImageModels } from "@/lib/models";
+import { toast } from "@/hooks/use-toast";
 
 interface TemplateModalProps {
   template: Template;
@@ -44,6 +45,7 @@ export function TemplateModal({
     Array<{ id: string; name: string }>
   >([]);
   const [isDeploying, setIsDeploying] = useState(false);
+  const [isCopyingToCursor, setIsCopyingToCursor] = useState(false);
 
   const handleDeploy = async () => {
     setIsDeploying(true);
@@ -107,9 +109,6 @@ export function TemplateModal({
 
   const handleMorphicModelSelect = (model: any) => {
     setSelectedModel(model);
-    const modelHash = generateModelHash(model.id);
-    window.open(`http://localhost:3003?model=${modelHash}`, "_blank");
-    onClose();
   };
 
   const handleMorphicDeploy = () => {
@@ -123,12 +122,55 @@ export function TemplateModal({
     onClose();
   };
 
-  const handleOpenInCursor = () => {
-    // Simulate opening in Cursor
-    window.open(
-      `https://cursor.sh/clone?repo=openhub-template-${template.id}`,
-      "_blank"
-    );
+  const handleOpenInCursor = async () => {
+    if (!selectedModel) {
+      toast({
+        title: "Model Required",
+        description: "Please select a model before copying the template.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsCopyingToCursor(true);
+
+    try {
+      const response = await fetch("/api/templates/copy", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          templateId: template.id,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Template Copied Successfully!",
+          description: `${template.name} has been copied to your Downloads folder and opened in Cursor.`,
+        });
+        onClose();
+      } else {
+        toast({
+          title: "Failed to Copy Template",
+          description:
+            result.error || "An error occurred while copying the template.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error copying template:", error);
+      toast({
+        title: "Network Error",
+        description: "Failed to connect to the server. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCopyingToCursor(false);
+    }
   };
 
   const handleOpenInLovable = () => {
@@ -138,27 +180,22 @@ export function TemplateModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold">{template.name}</h2>
-                <Badge variant="secondary" className="mt-1">
-                  {template.category.replace("-", " ").toUpperCase()}
-                </Badge>
-              </div>
+          <DialogTitle className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="w-4 h-4" />
-            </Button>
+            <div>
+              <h2 className="text-xl font-bold">{template.name}</h2>
+              <Badge variant="secondary" className="mt-1">
+                {template.category.replace("-", " ").toUpperCase()}
+              </Badge>
+            </div>
           </DialogTitle>
         </DialogHeader>
 
-        <Tabs defaultValue="customize" className="w-full">
+        <Tabs defaultValue="customize" className="w-full mb-2">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger
               value="customize"
@@ -181,7 +218,9 @@ export function TemplateModal({
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="title">App Title</Label>
+                  <Label htmlFor="title" className="mb-2">
+                    App Title
+                  </Label>
                   <Input
                     id="title"
                     value={customTitle}
@@ -190,7 +229,9 @@ export function TemplateModal({
                   />
                 </div>
                 <div>
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description" className="mb-2">
+                    Description
+                  </Label>
                   <Textarea
                     id="description"
                     value={customDescription}
@@ -200,7 +241,7 @@ export function TemplateModal({
                   />
                 </div>
                 <div>
-                  <Label>Tags</Label>
+                  <Label className="mb-2">Tags</Label>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {template.tags.map((tag) => (
                       <Badge key={tag} variant="outline">
@@ -317,18 +358,19 @@ export function TemplateModal({
                       size="sm"
                       className="w-full justify-start bg-transparent"
                       onClick={handleOpenInCursor}
+                      disabled={isCopyingToCursor || !selectedModel}
                     >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Open in Cursor
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full justify-start bg-transparent"
-                      onClick={handleOpenInLovable}
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Open in Lovable
+                      {isCopyingToCursor ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
+                          Copying Template...
+                        </>
+                      ) : (
+                        <>
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Copy to Cursor
+                        </>
+                      )}
                     </Button>
                   </div>
                 </div>

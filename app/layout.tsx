@@ -4,9 +4,9 @@ import { GeistMono } from 'geist/font/mono'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: 'OpenHub',
+  description: 'OpenHub is a platform for creating and sharing AI-powered applications.',
+  generator: 'OpenHub Labs',
 }
 
 export default function RootLayout({
