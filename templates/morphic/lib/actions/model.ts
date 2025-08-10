@@ -15,6 +15,7 @@ export async function setModelFromHash(formData: FormData) {
 
   if (selectedModel && selectedModel.enabled) {
     // Clear any existing model cookie first
+    // @ts-ignore
     cookies().set('selectedModel', '', {
       httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
@@ -24,6 +25,7 @@ export async function setModelFromHash(formData: FormData) {
     })
 
     // Set the new model cookie
+    // @ts-ignore
     cookies().set('selectedModel', JSON.stringify(selectedModel), {
       httpOnly: false,
       secure: process.env.NODE_ENV === 'production',

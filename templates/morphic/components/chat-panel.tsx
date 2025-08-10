@@ -193,17 +193,17 @@ export function ChatPanel({
               <SearchModeToggle />
             </div>
             <div className="flex items-center gap-2">
-            <button
-              className="relative w-fit text-sm p-1.5 rounded-lg flex flex-row items-center gap-2 dark:hover:bg-zinc-700 hover:bg-zinc-200 cursor-pointer"
-              onClick={() => {
-                const url = new URL(window.location.href);
-                navigator.clipboard.writeText(url.toString());
-                console.log(url.toString());
-                toast.success("Shareable URL copied to clipboard!");
-              }}
-            >
-              <ShareIcon />
-            </button>
+              <button
+                className="relative w-fit text-sm p-1.5 rounded-lg flex flex-row items-center gap-2 dark:hover:bg-zinc-700 hover:bg-zinc-200 cursor-pointer"
+                onClick={() => {
+                  const url = new URL(window.location.href)
+                  navigator.clipboard.writeText(url.toString())
+                  console.log(url.toString())
+                  toast.success('Shareable URL copied to clipboard!')
+                }}
+              >
+                <ShareIcon />
+              </button>
               {messages.length > 0 && (
                 <Button
                   variant="outline"

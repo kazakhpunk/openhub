@@ -60,13 +60,15 @@ modelIds.forEach((modelId, index) => {
   console.log(`• ${name}`);
   console.log(`  Model ID: ${modelId}`);
   console.log(`  Hash: ${hash}`);
-  console.log(`  Morphic URL: http://localhost:3003?model=${hash}`);
+  const morphicBaseUrl = process.env.MORPHIC_URL || "http://localhost:3003";
+  console.log(`  Morphic URL: ${morphicBaseUrl}?model=${hash}`);
   console.log("");
 });
 
 console.log(`\n📊 Total models: ${modelIds.length}`);
 console.log("\n🔗 Example usage:");
+const morphicBaseUrlExample = process.env.MORPHIC_URL || "http://localhost:3003";
 console.log(
-  "• Redirect to morphic with specific model: http://localhost:3003?model=abc123def456"
+  `• Redirect to morphic with specific model: ${morphicBaseUrlExample}?model=abc123def456`
 );
 console.log("• Use in model picker for redirection");

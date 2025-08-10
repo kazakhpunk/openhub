@@ -32,6 +32,11 @@ export function TemplateModal({
   isOpen,
   onClose,
 }: TemplateModalProps) {
+  const REASONING_URL =
+    process.env.NEXT_PUBLIC_REASONING_URL || "http://localhost:3001";
+  const ALTGEN_URL = process.env.NEXT_PUBLIC_ALTGEN_URL || "http://localhost:3002";
+  const MORPHIC_URL =
+    process.env.NEXT_PUBLIC_MORPHIC_URL || "http://localhost:3003";
   const router = useRouter();
   const [customTitle, setCustomTitle] = useState(template.name);
   const [customDescription, setCustomDescription] = useState(
@@ -79,7 +84,7 @@ export function TemplateModal({
       customDescription || "What would you like me to think about today?";
     const modelId = selectedModel?.id || "anthropic/claude-3.5-sonnet";
     const encoded = encodeData(modelId, heading, description);
-    window.open(`http://localhost:3001/${encoded}`, "_blank");
+    window.open(`${REASONING_URL}/${encodeURIComponent(encoded)}`, "_blank");
   };
 
   const isReasoningTemplate = template.id === "ai-sdk-reasoning-starter";
@@ -114,10 +119,10 @@ export function TemplateModal({
   const handleMorphicDeploy = () => {
     if (selectedModel) {
       const modelHash = generateModelHash(selectedModel.id);
-      window.open(`http://localhost:3003?model=${modelHash}`, "_blank");
+      window.open(`${MORPHIC_URL}?model=${encodeURIComponent(modelHash)}`, "_blank");
     } else {
       // Open morphic without specific model
-      window.open(`http://localhost:3003`, "_blank");
+      window.open(`${MORPHIC_URL}`, "_blank");
     }
     onClose();
   };
@@ -390,10 +395,7 @@ export function TemplateModal({
                           heading,
                           description
                         );
-                        window.open(
-                          `http://localhost:3002/${encoded}`,
-                          "_blank"
-                        );
+                        window.open(`${ALTGEN_URL}/${encodeURIComponent(encoded)}`, "_blank");
                       }
                     : isMorphicTemplate
                     ? handleMorphicDeploy
