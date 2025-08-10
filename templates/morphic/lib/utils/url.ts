@@ -23,11 +23,19 @@ export async function getBaseUrlFromHeaders(): Promise<URL> {
       }${host}`
       return new URL(constructedUrl)
     } else {
-      return new URL('http://localhost:3000')
+      const fallback =
+        process.env.NEXT_PUBLIC_BASE_URL ||
+        process.env.BASE_URL ||
+        'http://localhost:3000'
+      return new URL(fallback)
     }
   } catch (urlError) {
     // Fallback to default URL if any error occurs during URL construction
-    return new URL('http://localhost:3000')
+    const fallback =
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      process.env.BASE_URL ||
+      'http://localhost:3000'
+    return new URL(fallback)
   }
 }
 
