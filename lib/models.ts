@@ -191,3 +191,15 @@ export async function getModelsForCategory(category: string): Promise<Model[]> {
 }
 
 export { models }
+
+// Reasoning models fetcher (from the reasoning starter app API)
+export async function getReasoningModels(): Promise<Array<{ id: string; name: string }>> {
+  try {
+    const res = await fetch("/api/reasoning-models", { cache: "force-cache" })
+    if (!res.ok) return []
+    const body = (await res.json()) as { data: Array<{ id: string; name: string }> }
+    return body.data
+  } catch {
+    return []
+  }
+}

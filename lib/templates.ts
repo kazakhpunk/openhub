@@ -19,6 +19,17 @@ export const templates: Template[] = [
     uses: 15420,
     featured: true,
   },
+
+  // Reasoning Starter (Text to Text)
+  {
+    id: "ai-sdk-reasoning-starter",
+    name: "AI SDK Reasoning Starter",
+    description: "Experiment with reasoning-capable models and share configured sessions",
+    category: "text-to-text",
+    tags: ["reasoning", "openrouter", "nextjs", "ai-sdk"],
+    uses: 0,
+    featured: true,
+  },
   {
     id: "logo-maker",
     name: "Logo Maker",
