@@ -26,9 +26,7 @@ interface ChatProps {
 
 export function Chat({ modelName, headingText, descriptionText }: ChatProps) {
   const [input, setInput] = useState<string>("");
-  const [selectedModelId, setSelectedModelId] = useState<modelID>(
-    (modelName as modelID) || "openai/gpt-5-mini",
-  );
+  const selectedModelId: modelID = modelName as modelID || "openai/gpt-5-mini";
   const [isReasoningEnabled, setIsReasoningEnabled] = useState<boolean>(true);
   // Model picking removed from chat site; keep a fixed default model id
 

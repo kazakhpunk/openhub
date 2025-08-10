@@ -11,7 +11,7 @@ type ModelsResponse = {
 };
 
 export const dynamic = "force-static";
-export const revalidate = 60 * 60 * 24 * 365; // ~1 year
+export const revalidate = 31536000; // 1 year in seconds
 
 export async function GET() {
   const apiUrl = "https://openrouter.ai/api/v1/models";
