@@ -10,6 +10,7 @@ services:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - MODEL_HASH_SECRET=${MODEL_HASH_SECRET}
     ports:
       - "3000:3000"
     depends_on: []
@@ -55,6 +56,12 @@ services:
     environment:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
+      # Shared
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      # Supabase
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - TAVILY_API_KEY=${TAVILY_API_KEY}
     ports:
       - "3003:3003"
     restart: unless-stopped

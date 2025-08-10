@@ -19,13 +19,13 @@ export default async function SearchPage(props: {
 
   const id = generateId()
   const models = await getModels()
-  
+
   return (
     <>
       {model && (
-        <ModelSelectorHandler 
-          modelHash={model} 
-          redirectUrl={`/search?q=${encodeURIComponent(q)}`} 
+        <ModelSelectorHandler
+          modelHash={model}
+          redirectUrl={`/search?q=${encodeURIComponent(q)}`}
         />
       )}
       <Chat id={id} query={q} models={models} hideModelSelector />

@@ -19,10 +19,7 @@ export default async function Page({ searchParams }: PageProps) {
   return (
     <>
       {params.model && (
-        <ModelSelectorHandler 
-          modelHash={params.model} 
-          redirectUrl="/" 
-        />
+        <ModelSelectorHandler modelHash={params.model} redirectUrl="/" />
       )}
       <Chat id={id} models={models} hideModelSelector />
     </>
